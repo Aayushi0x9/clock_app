@@ -91,7 +91,7 @@ class _ClockPageState extends State<ClockPage> {
               ),
             ),
             clockOptionTile(
-              title: "Timer",
+              title: "Stopwatch",
               val: _isTimer,
               onChanged: (val) => setState(
                 () => _isTimer = !_isTimer,
@@ -140,9 +140,13 @@ class _ClockPageState extends State<ClockPage> {
                   style: TextStyle(
                     color: Colors.yellow,
                     fontSize: textScaler.scale(30),
-                    decoration: TextDecoration.underline,
-                    decorationColor: Colors.yellow,
                   ),
+                ),
+                Divider(
+                  indent: w * 0.30,
+                  endIndent: w * 0.27,
+                  color: Colors.yellow,
+                  thickness: 2,
                 ),
                 Stack(
                   alignment: Alignment.center,
@@ -177,8 +181,8 @@ class _ClockPageState extends State<ClockPage> {
                                   angle: index * (pi * 2) / 60,
                                   child: Divider(
                                       endIndent: index % 5 == 0
-                                          ? size.width * 0.88
-                                          : size.width * 0.899,
+                                          ? size.width * 0.87
+                                          : size.width * 0.88,
                                       thickness: index % 5 == 0 ? 7 : 2,
                                       color: index % 15 == 0
                                           ? Colors.yellow
@@ -250,6 +254,7 @@ class _ClockPageState extends State<ClockPage> {
                     indent: w * 0.27,
                     endIndent: w * 0.27,
                     color: Colors.yellow,
+                    thickness: 2,
                   ),
                   Expanded(
                     flex: 4,
@@ -353,6 +358,7 @@ class _ClockPageState extends State<ClockPage> {
                     indent: w * 0.27,
                     endIndent: w * 0.27,
                     color: Colors.yellow,
+                    thickness: 2,
                   ),
                   SizedBox(
                     height: h * 0.20,
@@ -388,7 +394,7 @@ class _ClockPageState extends State<ClockPage> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: Text(
-                      "${d.day.toString().padLeft(2, "0")}, ${d.month.toString().padLeft(2, '0')}, ${d.year}          ",
+                      "${d.day.toString().padLeft(2, "0")}, ${d.month.toString().padLeft(2, '0')}, ${d.year} ",
                       style: TextStyle(
                         color: Colors.yellow,
                         fontSize: textScaler.scale(20),
@@ -424,6 +430,7 @@ class _ClockPageState extends State<ClockPage> {
                     indent: w * 0.27,
                     endIndent: w * 0.27,
                     color: Colors.yellow,
+                    thickness: 2,
                   ),
                   SizedBox(
                     height: h * 0.2,
@@ -432,7 +439,7 @@ class _ClockPageState extends State<ClockPage> {
                     alignment: Alignment.center,
                     children: [
                       Transform.scale(
-                        scale: 8,
+                        scale: 6,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
                           value: d.hour / 12,
@@ -440,7 +447,7 @@ class _ClockPageState extends State<ClockPage> {
                         ),
                       ),
                       Transform.scale(
-                        scale: 10,
+                        scale: 8,
                         child: CircularProgressIndicator(
                           strokeWidth: 1,
                           value: d.minute / 60,
@@ -448,7 +455,7 @@ class _ClockPageState extends State<ClockPage> {
                         ),
                       ),
                       Transform.scale(
-                        scale: 12,
+                        scale: 10,
                         child: CircularProgressIndicator(
                           strokeWidth: 1,
                           value: d.second / 60,
