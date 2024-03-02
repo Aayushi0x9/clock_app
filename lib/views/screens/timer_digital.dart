@@ -58,20 +58,52 @@ class _DigitalPageState extends State<DigitalPage> {
       body: Visibility(
         // visible: _isTimer,
         child: Container(
-          decoration: const BoxDecoration(color: Color(0xffF6F5F5)),
+          decoration: const BoxDecoration(color: Colors.black),
           alignment: Alignment.center,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(
+                height: h * 0.1,
+              ),
+              Text(
+                "StopWatch",
+                style: TextStyle(
+                  color: Colors.yellow,
+                  fontSize: textScaler.scale(32),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Divider(
+                indent: w * 0.27,
+                endIndent: w * 0.27,
+                color: Colors.yellow,
+              ),
               Expanded(
-                flex: 5,
+                flex: 4,
                 child: Align(
-                  child: Text(
-                    "${hour.toString().padLeft(2, '0')} : ${minute.toString().padLeft(2, '0')} : ${second.toString().padLeft(2, '0')}",
-                    style: TextStyle(
-                      fontSize: textScaler.scale(35),
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1,
+                  alignment: Alignment.center,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.yellow,
+                          offset: Offset(1, 0),
+                          blurRadius: 5,
+                        )
+                      ],
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                    child: Text(
+                      " ${hour.toString().padLeft(2, '0')} : ${minute.toString().padLeft(2, '0')} : ${second.toString().padLeft(2, '0')} ",
+                      style: TextStyle(
+                        color: Colors.yellow,
+                        fontSize: textScaler.scale(50),
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                      ),
                     ),
                   ),
                 ),
@@ -113,7 +145,9 @@ class _DigitalPageState extends State<DigitalPage> {
                           hour = minute = second = 0;
                         });
                       },
-                      icon: const Icon(Icons.stop),
+                      icon: const Icon(
+                        Icons.stop,
+                      ),
                       label: const Text("Restart"),
                     ),
                   ],
