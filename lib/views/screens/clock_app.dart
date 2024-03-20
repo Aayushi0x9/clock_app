@@ -4,6 +4,9 @@ import 'package:analog_clock_app/utils/MyRoute.dart';
 import 'package:analog_clock_app/views/component/clock_optiontile.dart';
 import 'package:flutter/material.dart';
 
+import '../../utils/Global.dart';
+import '../../utils/img.dart';
+
 class ClockPage extends StatefulWidget {
   const ClockPage({super.key});
 
@@ -13,12 +16,13 @@ class ClockPage extends StatefulWidget {
 
 class _ClockPageState extends State<ClockPage> {
   DateTime d = DateTime.now();
-  bool _isAnalog = true;
+  bool _isAnalog = false;
   bool _isTimer = false;
-  bool _isDigital = false;
+  bool _isDigital = true;
   bool _isImage = false;
   bool _isStrap = false;
-
+  late String Image =
+      "https://m.media-amazon.com/images/I/21i-4Jd8SsL._AC_UF1000,1000_QL80_.jpg";
   int hour = 00;
   int minute = 00;
   int second = 00;
@@ -111,6 +115,53 @@ class _ClockPageState extends State<ClockPage> {
                 () => _isStrap = !_isStrap,
               ),
             ),
+            clockOptionTile(
+              title: "Image",
+              val: _isImage,
+              onChanged: (val) => setState(
+                () => _isImage = !_isImage,
+              ),
+            ),
+            _isImage
+                ? SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: List.generate(
+                        Images.length,
+                        (index) => GestureDetector(
+                          onTap: () {
+                            setState(
+                              () {
+                                Image = Images[index];
+                              },
+                            );
+                          },
+                          child: Container(
+                            width: 150,
+                            height: 180,
+                            margin: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: Image == Images[index]
+                                    ? Colors.black
+                                    : Colors.white,
+                                style: BorderStyle.solid,
+                                width: 3,
+                              ),
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                  Images[index],
+                                ),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                : Container(),
           ],
         ),
       ),
@@ -122,9 +173,6 @@ class _ClockPageState extends State<ClockPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        // val : _isAnalog,
-        // onChanged
-        // backgroundColor: Colors.black,
       ),
       body: Stack(
         alignment: Alignment.center,
@@ -232,113 +280,108 @@ class _ClockPageState extends State<ClockPage> {
           //stopwatch
           Visibility(
             visible: _isTimer,
-            child: Container(
-              decoration: const BoxDecoration(color: Colors.black),
-              alignment: Alignment.center,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: h * 0.1,
-                  ),
-                  Text(
-                    "StopWatch",
-                    style: TextStyle(
-                      color: Colors.yellow,
-                      fontSize: textScaler.scale(32),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Divider(
-                    indent: w * 0.27,
-                    endIndent: w * 0.27,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: h * 0.1,
+                ),
+                Text(
+                  "StopWatch",
+                  style: TextStyle(
                     color: Colors.yellow,
-                    thickness: 2,
+                    fontSize: textScaler.scale(32),
+                    fontWeight: FontWeight.bold,
                   ),
-                  Expanded(
-                    flex: 4,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.yellow,
-                              offset: Offset(1, 0),
-                              blurRadius: 5,
-                            )
-                          ],
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                        child: Text(
-                          " ${hour.toString().padLeft(2, '0')} : ${minute.toString().padLeft(2, '0')} : ${second.toString().padLeft(2, '0')} ",
-                          style: TextStyle(
+                ),
+                Divider(
+                  indent: w * 0.27,
+                  endIndent: w * 0.27,
+                  color: Colors.yellow,
+                  thickness: 2,
+                ),
+                Expanded(
+                  flex: 4,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        boxShadow: const [
+                          BoxShadow(
                             color: Colors.yellow,
-                            fontSize: textScaler.scale(50),
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1,
-                          ),
+                            offset: Offset(1, 0),
+                            blurRadius: 5,
+                          )
+                        ],
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                      child: Text(
+                        " ${hour.toString().padLeft(2, '0')} : ${minute.toString().padLeft(2, '0')} : ${second.toString().padLeft(2, '0')} ",
+                        style: TextStyle(
+                          color: Colors.yellow,
+                          fontSize: textScaler.scale(50),
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1,
                         ),
                       ),
                     ),
                   ),
-                  Expanded(
-                    flex: 2,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            if (!isStop) {
-                              timer();
-                            }
-                            setState(() {});
-                          },
-                          icon: const Icon(Icons.timer),
-                          label: const Text("Start"),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          if (!isStop) {
+                            timer();
+                          }
+                          setState(() {});
+                        },
+                        icon: const Icon(Icons.timer),
+                        label: const Text("Start"),
+                      ),
+                      SizedBox(
+                        width: w * 0.025,
+                      ),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          setState(() {
+                            isStop = false;
+                          });
+                        },
+                        icon: const Icon(Icons.access_time_rounded),
+                        label: const Text("Stop"),
+                      ),
+                      SizedBox(
+                        width: w * 0.025,
+                      ),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          setState(() {
+                            isStop = false;
+                            hour = minute = second = 0;
+                          });
+                        },
+                        icon: const Icon(
+                          Icons.stop,
                         ),
-                        SizedBox(
-                          width: w * 0.025,
-                        ),
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            setState(() {
-                              isStop = false;
-                            });
-                          },
-                          icon: const Icon(Icons.access_time_rounded),
-                          label: const Text("Stop"),
-                        ),
-                        SizedBox(
-                          width: w * 0.025,
-                        ),
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            setState(() {
-                              isStop = false;
-                              hour = minute = second = 0;
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.stop,
-                          ),
-                          label: const Text("Restart"),
-                        ),
-                      ],
-                    ),
+                        label: const Text("Restart"),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           // digital
           Visibility(
             visible: _isDigital,
-            child: Container(
-              color: Colors.black,
-              alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.all(40),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
@@ -366,6 +409,7 @@ class _ClockPageState extends State<ClockPage> {
                   Align(
                     alignment: Alignment.center,
                     child: Container(
+                      padding: EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         boxShadow: const [
                           BoxShadow(
@@ -391,20 +435,51 @@ class _ClockPageState extends State<ClockPage> {
                   SizedBox(
                     height: h * 0.02,
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      "${d.day.toString().padLeft(2, "0")}, ${d.month.toString().padLeft(2, '0')}, ${d.year} ",
-                      style: TextStyle(
-                        color: Colors.yellow,
-                        fontSize: textScaler.scale(20),
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          "${Day[d.weekday - 1]} , ${d.day.toString().padLeft(2, "0")} , ${Month[d.month - 1]} ",
+                          style: TextStyle(
+                            color: Colors.yellow,
+                            fontSize: textScaler.scale(20),
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1,
+                          ),
+                        ),
                       ),
-                    ),
+                      SizedBox(
+                        width: w * 0.02,
+                      ),
+                      (d.hour) >= 12
+                          ? Text(
+                              'PM',
+                              style: TextStyle(
+                                color: Colors.yellow,
+                                fontSize: textScaler.scale(30),
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1,
+                              ),
+                            )
+                          : Text(
+                              'AM',
+                              style: TextStyle(
+                                color: Colors.yellow,
+                                fontSize: textScaler.scale(30),
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1,
+                              ),
+                            ),
+                    ],
                   ),
+                  // SizedBox(
+                  //   height: h * 0.2,
+                  // ),
+
                   SizedBox(
-                    height: h * 0.2,
+                    width: w * 0.2,
                   ),
                 ],
               ),
@@ -442,7 +517,7 @@ class _ClockPageState extends State<ClockPage> {
                         scale: 6,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          value: d.hour / 12,
+                          value: d.hour / 24,
                           color: Colors.yellow,
                         ),
                       ),
