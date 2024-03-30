@@ -1,8 +1,9 @@
-import 'dart:math';
-
-import 'package:analog_clock_app/utils/Global.dart';
-import 'package:analog_clock_app/utils/MyRoute.dart';
+import 'package:analog_clock_app/views/component/analogclock.dart';
+import 'package:analog_clock_app/views/component/bottomNavigationbar.dart';
 import 'package:analog_clock_app/views/component/clock_optiontile.dart';
+import 'package:analog_clock_app/views/component/digitalclock.dart';
+import 'package:analog_clock_app/views/component/strapclock.dart';
+import 'package:analog_clock_app/views/component/timeview.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/img.dart';
@@ -17,7 +18,7 @@ class ClockPage extends StatefulWidget {
 class _ClockPageState extends State<ClockPage> {
   DateTime d = DateTime.now();
   bool _isAnalog = false;
-  bool _isTimer = false;
+  bool _isStopWatch = false;
   bool _isDigital = true;
   bool _isImage = false;
   bool _isStrap = false;
@@ -96,9 +97,9 @@ class _ClockPageState extends State<ClockPage> {
             ),
             clockOptionTile(
               title: "Stopwatch",
-              val: _isTimer,
+              val: _isStopWatch,
               onChanged: (val) => setState(
-                () => _isTimer = !_isTimer,
+                () => _isStopWatch = !_isStopWatch,
               ),
             ),
             clockOptionTile(
@@ -180,106 +181,11 @@ class _ClockPageState extends State<ClockPage> {
           //Analogue: --------------
           Visibility(
             visible: _isAnalog,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Analog Clock",
-                  style: TextStyle(
-                    color: Colors.yellow,
-                    fontSize: textScaler.scale(30),
-                  ),
-                ),
-                Divider(
-                  indent: w * 0.30,
-                  endIndent: w * 0.27,
-                  color: Colors.yellow,
-                  thickness: 2,
-                ),
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.all(16),
-                      height: size.height * 0.6,
-                      child: Transform.rotate(
-                        angle: pi / 2,
-                        child: Container(
-                          padding: const EdgeInsets.all(5),
-                          alignment: Alignment.center,
-                          height: size.height * 6,
-                          width: size.width,
-                          decoration: const BoxDecoration(
-                            color: Colors.black,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.white,
-                                blurRadius: 18,
-                                offset: Offset(0, 0),
-                              ),
-                            ],
-                          ),
-                          child: Stack(
-                            children: [
-                              ...List.generate(
-                                60,
-                                (index) => Transform.rotate(
-                                  angle: index * (pi * 2) / 60,
-                                  child: Divider(
-                                      endIndent: index % 5 == 0
-                                          ? size.width * 0.87
-                                          : size.width * 0.88,
-                                      thickness: index % 5 == 0 ? 7 : 2,
-                                      color: index % 15 == 0
-                                          ? Colors.yellow
-                                          : Colors.white),
-                                ),
-                              ),
-                              // hour :----------
-                              Transform.rotate(
-                                angle: d.hour * (pi * 2) / 12,
-                                child: Divider(
-                                  indent: 90,
-                                  endIndent: size.width * 0.5 - 23,
-                                  thickness: 5,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              //minute :---------
-                              Transform.rotate(
-                                angle: d.minute * (pi * 2) / 60,
-                                child: Divider(
-                                  indent: 50,
-                                  endIndent: size.width * 0.5 - 23,
-                                  thickness: 3,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              //seconds :------------
-                              Transform.rotate(
-                                angle: d.second * (pi * 2) / 60,
-                                child: Divider(
-                                  indent: 35,
-                                  endIndent: size.width * 0.5 - 23,
-                                  thickness: 2,
-                                  color: Colors.yellow,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+            child: analogClock(textScaler: textScaler, w: w, size: size, d: d),
           ),
           //stopwatch
           Visibility(
-            visible: _isTimer,
+            visible: _isStopWatch,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -301,34 +207,11 @@ class _ClockPageState extends State<ClockPage> {
                   color: Colors.yellow,
                   thickness: 2,
                 ),
-                Expanded(
-                  flex: 4,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.yellow,
-                            offset: Offset(1, 0),
-                            blurRadius: 5,
-                          )
-                        ],
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                      child: Text(
-                        " ${hour.toString().padLeft(2, '0')} : ${minute.toString().padLeft(2, '0')} : ${second.toString().padLeft(2, '0')} ",
-                        style: TextStyle(
-                          color: Colors.yellow,
-                          fontSize: textScaler.scale(50),
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                timeView(
+                    hour: hour,
+                    minute: minute,
+                    second: second,
+                    textScaler: textScaler),
                 Expanded(
                   flex: 2,
                   child: Row(
@@ -380,200 +263,19 @@ class _ClockPageState extends State<ClockPage> {
           // digital
           Visibility(
             visible: _isDigital,
-            child: Padding(
-              padding: const EdgeInsets.all(40),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Text(
-                      "Digital Clock",
-                      style: TextStyle(
-                          color: Colors.yellow,
-                          fontSize: textScaler.scale(30),
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Divider(
-                    indent: w * 0.27,
-                    endIndent: w * 0.27,
-                    color: Colors.yellow,
-                    thickness: 2,
-                  ),
-                  SizedBox(
-                    height: h * 0.20,
-                  ),
-                  //time
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.yellow,
-                          offset: Offset(1, 0),
-                          blurRadius: 5,
-                        )
-                      ],
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          " ${d.hour.toString().padLeft(2, '0')} : ${d.minute.toString().padLeft(2, '0')}",
-                          style: TextStyle(
-                            color: Colors.yellow,
-                            fontSize: textScaler.scale(70),
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1,
-                          ),
-                        ),
-                        SizedBox(width: w * 0.08),
-                        (d.hour) >= 12
-                            ? Text(
-                                'PM',
-                                style: TextStyle(
-                                  color: Colors.yellow,
-                                  fontSize: textScaler.scale(50),
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1,
-                                ),
-                              )
-                            : Text(
-                                'AM',
-                                style: TextStyle(
-                                  color: Colors.yellow,
-                                  fontSize: textScaler.scale(50),
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1,
-                                ),
-                              ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: h * 0.01,
-                  ),
-                  //date
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        "${Day[d.weekday - 1]} , ${d.day.toString()} ${Month[d.month - 1]}",
-                        style: const TextStyle(
-                            color: Colors.yellow,
-                            letterSpacing: 3,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
+            child: digitClock(textScaler: textScaler, w: w, h: h, d: d),
           ),
           //Strap
           Visibility(
             visible: _isStrap,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "Strap Clock",
-                    style: TextStyle(
-                      color: Colors.yellow,
-                      fontSize: textScaler.scale(32),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Divider(
-                    indent: w * 0.27,
-                    endIndent: w * 0.27,
-                    color: Colors.yellow,
-                    thickness: 2,
-                  ),
-                  SizedBox(
-                    height: h * 0.2,
-                  ),
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Transform.scale(
-                        scale: 6,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          value: d.hour / 24,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                      Transform.scale(
-                        scale: 8,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 1,
-                          value: d.minute / 60,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                      Transform.scale(
-                        scale: 10,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 1,
-                          value: d.second / 60,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                      Text(
-                        textAlign: TextAlign.center,
-                        "${d.hour.toString().padLeft(2, '0')} : ${d.minute.toString().padLeft(2, '0')} : ${d.second.toString().padLeft(2, '0')}",
-                        style: TextStyle(
-                            color: Colors.yellow,
-                            fontWeight: FontWeight.bold,
-                            fontSize: textScaler.scale(22)),
-                      ),
-                      SizedBox(
-                        height: h * 0.3,
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          )
+            child: strapClock(textScaler: textScaler, w: w, d: d, h: h),
+          ),
         ],
       ),
       backgroundColor: Colors.black,
       // timer
 
-      bottomNavigationBar: BottomNavigationBar(
-        unselectedItemColor: Colors.grey,
-        selectedItemColor: Colors.black,
-        backgroundColor: Colors.white,
-        items: [
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded),
-            label: "Home",
-          ),
-          // GestureDetector(
-          //   onTap: () {
-          //     Navigator.of(context).pushNamed(MyRoutes.DigitalPage);
-          //   },
-          BottomNavigationBarItem(
-            icon: IconButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(MyRoutes.DigitalPage);
-              },
-              icon: const Icon(Icons.timer),
-            ),
-            label: "Timer",
-          ),
-        ],
-      ),
+      bottomNavigationBar: MyNavigationBar(context: context),
     );
   }
 }
